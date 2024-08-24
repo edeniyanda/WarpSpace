@@ -6,8 +6,18 @@
             <div class="column is-half">
                 <div class="box">
                     <h1 class="title has-text-centered has-text-info">Sign Up for WarpSpace</h1>
+
+                    <!-- Messages Section -->
+                    {% if messages %}
+                        <div class="notification is-danger">
+                            <button class="delete"></button>
+                            {% for message in messages %}
+                                <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     
-                    <form method="post" action="." enctype="multipart/form-data">
+                    <form method="POST" action="" enctype="multipart/form-data">
                         {% csrf_token %}
 
                         <div class="columns">
