@@ -1,62 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Warp{% endblock %}</title>
-    <!-- Link to Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    {% block extra_head %}{% endblock %}
-</head>
-<body class="bg-gray-100 text-gray-900">
 
-    <!-- Header -->
-    <header class="bg-blue-600 text-white py-4">
-        <div class="container mx-auto flex flex-wrap justify-between items-center px-4">
-            <h1 class="text-2xl font-bold">
-                <a href="{% url 'home' %}" class="hover:underline">Warp</a>
-            </h1>
-            <nav>
-                <!-- Mobile Menu Button -->
-                <div class="block lg:hidden">
-                    <button id="menu-button" class="text-white focus:outline-none">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                        </svg>
-                    </button>
+{% load static %}
+
+<html>
+    <head>
+        <!-- Meta -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Title -->
+        <title>WarpSpace</title>
+
+        <!-- Styles -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+        <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    </head>
+
+    <body>
+        <!-- Nav -->
+        <nav class="navbar is-info" role="navigation">
+            <div class="navbar-brand">
+                <a href="/" class="navbar-item"><strong>WarpSpeed</strong></a>
+
+                <a class="navbar-burger">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    <div class="navbar-item">
+                        <form method="get" action="">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <input type="text" class="input" placeholder="Search" name="query">
+                                </div>
+                                <div class="control">
+                                    <button class="button is-success">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <!-- Desktop Menu -->
-                <ul id="menu" class="hidden lg:flex space-x-4 mt-2 lg:mt-0">
-                    <li><a href="{% url 'home' %}" class="hover:underline">Home</a></li>
-                    <li><a href="{% url 'profile' %}" class="hover:underline">Profile</a></li>
-                    <li><a href="{% url 'messages' %}" class="hover:underline">Messages</a></li>
-                    <li><a href="{% url 'settings' %}" class="hover:underline">Settings</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto py-6 px-4">
-        {% block content %}{% endblock %}
-    </main>
+                <div class="navbar-end">
+                    <!-- {% if request.user.is_authenticated %} -->
+                        <a href="" class="navbar-item">Notifications ({{ notifications.count }})</a>
+                        <a href="" class="navbar-item">Feed</a>
+                        <a href="" class="navbar-item">Conversations</a>
+                        <a href="" class="navbar-item">Profile</a>
+                        <a href="" class="navbar-item">Edit profile</a>
+                    <!-- {% endif %} -->
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-4">
-        <div class="container mx-auto text-center">
-            <p>&copy; 2024 Warp. All rights reserved.</p>
-        </div>
-    </footer>
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <!-- {% if request.user.is_authenticated %} -->
+                                <a href="" class="button is-danger">Log out</a>
+                            <!-- {% else %} -->
+                                <a href="" class="button is-success"><strong>Sign up</strong></a>
+                                <a href="" class="button is-light">Log in</a>
+                            <!-- {% endif %} -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- End Nav -->
 
-    <!-- Optional JavaScript -->
-    <script>
-        // Toggle mobile menu
-        document.getElementById('menu-button').addEventListener('click', function() {
-            const menu = document.getElementById('menu');
-            menu.classList.toggle('hidden');
-        });
-    </script>
+        <!-- Content -->
+        <section class="section">
+            {% block content %}
+            {% endblock %}
+        </section>
+        <!-- End Content -->
 
-    {% block extra_scripts %}{% endblock %}
-</body>
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        {% block script %}
+        {% endblock %}
+        <!-- End Scripts -->
+    </body>
 </html>
