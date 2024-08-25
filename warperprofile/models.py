@@ -15,7 +15,7 @@ class Profile(models.Model):
     planet = models.CharField(max_length=100, blank=True, help_text="Your home planet.")
     star_system = models.CharField(max_length=100, blank=True, help_text="The star system you belong to.")
     species = models.CharField(max_length=100, blank=True, help_text="Your species.")
-    interests = models.CharField(maxlength=250, blank=True, help_text="What interests you in the cosmos?")
+    interests = models.CharField(max_length=250, blank=True, help_text="What interests you in the cosmos?")
     followers = models.ManyToManyField(User, related_name='following', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
