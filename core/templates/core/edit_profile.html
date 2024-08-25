@@ -6,19 +6,20 @@
         <div class="column is-half">
             <div class="box">
                 <!-- Title -->
-                <h1 class="title has-text-centered has-text-info">Edit Profile</h1>
-                
+                <h1 class="title has-text-centered has-text-info">Edit Your Profile</h1>
+                {% if profile.profileimg %}
+                <figure class="image is-128x128" style="margin: 0 auto;">
+                    <img id="profile-image-preview" class="is-rounded" src="{{ profile.profileimg.url }}" alt="Current profile image">
+                </figure>
+                <p class="has-text-centered">Current Profile Picture </p>
+                {% endif %}
                 <!-- Form -->
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
 
                     <!-- Profile Image Upload -->
                     <div class="field">
-                        <label class="label">Profile Image</label>
                         <div class="control">
-                            <figure class="image is-128x128">
-                                <img src="{{ profile.profileimg.url }}" alt="Profile Image" class="is-rounded">
-                            </figure>
                             <div class="file has-name is-info mt-2">
                                 <label class="file-label">
                                     <input class="file-input" type="file" name="profileimg">
@@ -85,4 +86,26 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block script %}
+    <!-- JavaScript to handle image preview -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const fileInput = document.querySelector('input[name="profileimg"]');
+        const previewImage = document.getElementById('profile-image-preview');
+
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
 {% endblock %}
