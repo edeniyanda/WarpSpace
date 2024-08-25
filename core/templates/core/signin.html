@@ -2,17 +2,54 @@
 
 {% block content %}
     <div class="container">
-        <div class="columns">
-            <div class="column is-12">
-                <h1 class="title">Log in</h1>
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <div class="box">
+                    <h1 class="title has-text-centered has-text-info">Login WarpSpace Account</h1>
 
-                <form method="post" action=".">
-                    {% csrf_token %}
+                    <!-- Messages Section -->
+                    {% if messages %}
+                        <div class="notification is-danger">
+                            <button class="delete"></button>
+                            {% for message in messages %}
+                                <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <form method="POST" action="" enctype="multipart/form-data">
+                        {% csrf_token %}
 
-                    {{ form.as_p }}
+                        <!-- Username -->
+                        <div class="field">
+                            <label for="username" class="label">Username</label>
+                            <div class="control has-icons-left">
+                                <input type="text" name="username" id="username" class="input" placeholder="johndoe123" required>
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-user-tag"></i>
+                                </span>
+                            </div>
+                        </div>
 
-                    <button class="button is-success" type="submit">Log in</button>
-                </form>
+                        <!-- Password -->
+                        <div class="field">
+                            <label for="password" class="label">Password</label>
+                            <div class="control has-icons-left">
+                                <input type="password" name="password" id="password" class="input" placeholder="********" required>
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-info is-fullwidth">Login</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

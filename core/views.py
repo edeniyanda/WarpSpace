@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages, auth
+from django.contrib.auth.decorators import login_required
 from warperprofile.models import Profile
 
 
@@ -9,6 +10,16 @@ def home(request):
     return render(request, "core/home.html", {})
 
 def signin(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST["password"]
+
+        user = auth.authenticate(username=username, password=password)
+        if user:
+            auth.login(request, user)
+            return redirect("home_page")
+        messages.info(request, "Invalid Username or Password")
+        return redirect("signin_page")
     return render(request, "core/signin.html", {})
 
 def signup(request):
@@ -44,4 +55,5 @@ def signup(request):
     else:
         return render(request, "core/signup.html", {})
 
-
+def profilepage(request):
+    pass
