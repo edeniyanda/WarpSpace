@@ -2,6 +2,15 @@
 
 {% block content %}
 <div class="container">
+    <!-- Messages Section -->
+    {% if messages %}
+        <div class="notification is-success" id="notification">
+            <button class="delete" onclick="this.parentElement.style.display='none';"></button>
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
     <div class="columns">
         <!-- Profile Sidebar -->
         <div class="column is-3">
@@ -60,4 +69,20 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block script %}
+    <script>
+        // Auto-hide the notification after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            var notification = document.getElementById('notification');
+            if (notification) {
+                setTimeout(function() {
+                    notification.style.opacity = '0';
+                    setTimeout(function() {
+                        notification.style.display = 'none';
+                    }, 500); // Delay to match the fade-out duration
+                }, 5000); // Display time in milliseconds
+            }
+        });
+    </script>
 {% endblock %}
