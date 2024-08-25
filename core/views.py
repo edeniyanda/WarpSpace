@@ -5,6 +5,7 @@ from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from warperprofile.models import Profile
 from django.shortcuts import render, get_object_or_404
+from warperprofile.forms import ProfileForm
 
 
 def home(request):
@@ -60,7 +61,7 @@ def signup(request):
 def profile_view(request, username):
     user = get_object_or_404(User, username=username)
     profile = get_object_or_404(Profile, user=user)
-    # posts = Post.objects.filter(author=user)  # Assuming you have a Post model with an `author` field
+    # posts = Post.objects.filter(author=user)  
 
     context = {
         'user': user,
@@ -69,3 +70,19 @@ def profile_view(request, username):
     }
 
     return render(request, 'core/profile.html', context)
+
+
+@login_required
+def edit_profile(request):
+    profile = get_object_or_404(Profile, user=request.user)
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully.")
+            return redirect('profile', username=request.user.username)
+    else:
+        form = ProfileForm(instance=profile)
+
+
+    return render(request, 'core/edit_profile.html', {'form': form})

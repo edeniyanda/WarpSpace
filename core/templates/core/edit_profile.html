@@ -1,0 +1,88 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <div class="box">
+                <!-- Title -->
+                <h1 class="title has-text-centered has-text-info">Edit Profile</h1>
+
+                <!-- Form -->
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Profile Image Upload -->
+                    <div class="field">
+                        <label class="label">Profile Image</label>
+                        <div class="control">
+                            <figure class="image is-128x128">
+                                <img src="{{ profile.profileimg.url }}" alt="Profile Image" class="is-rounded">
+                            </figure>
+                            <div class="file has-name is-info mt-2">
+                                <label class="file-label">
+                                    <input class="file-input" type="file" name="profileimg">
+                                    <span class="file-cta">
+                                        <span class="file-icon">
+                                            <i class="fas fa-upload"></i>
+                                        </span>
+                                        <span class="file-label">Choose a file…</span>
+                                    </span>
+                                    <span class="file-name">Your avatar</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bio -->
+                    <div class="field">
+                        <label class="label">Bio</label>
+                        <div class="control">
+                            <textarea name="bio" class="textarea" placeholder="Tell the galaxy about yourself">{{ form.bio.value }}</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Planet -->
+                    <div class="field">
+                        <label class="label">Planet</label>
+                        <div class="control">
+                            <input type="text" name="planet" class="input" value="{{ form.planet.value }}" placeholder="Your home planet">
+                        </div>
+                    </div>
+
+                    <!-- Star System -->
+                    <div class="field">
+                        <label class="label">Star System</label>
+                        <div class="control">
+                            <input type="text" name="star_system" class="input" value="{{ form.star_system.value }}" placeholder="The star system you belong to">
+                        </div>
+                    </div>
+
+                    <!-- Species -->
+                    <div class="field">
+                        <label class="label">Species</label>
+                        <div class="control">
+                            <input type="text" name="species" class="input" value="{{ form.species.value }}" placeholder="Your species">
+                        </div>
+                    </div>
+
+                    <!-- Interests -->
+                    <div class="field">
+                        <label class="label">Interests</label>
+                        <div class="control">
+                            <input type="text" name="interests" class="input" value="{{ form.interests.value }}" placeholder="What interests you in the cosmos?">
+                        </div>
+                    </div>
+
+                    <!-- Save Changes Button -->
+                    <div class="field">
+                        <div class="control">
+                            <button type="submit" class="button is-info is-fullwidth">Save Changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
