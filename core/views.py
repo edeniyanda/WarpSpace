@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from warperprofile.models import Profile
+from django.shortcuts import render, get_object_or_404
 
 
 def home(request):
@@ -55,5 +56,16 @@ def signup(request):
     else:
         return render(request, "core/signup.html", {})
 
-def profilepage(request):
-    pass
+@login_required(login_url="login_page")
+def profile_view(request, username):
+    user = get_object_or_404(User, username=username)
+    profile = get_object_or_404(Profile, user=user)
+    # posts = Post.objects.filter(author=user)  # Assuming you have a Post model with an `author` field
+
+    context = {
+        'user': user,
+        'profile': profile,
+        # 'posts': posts
+    }
+
+    return render(request, 'core/profile.html', context)

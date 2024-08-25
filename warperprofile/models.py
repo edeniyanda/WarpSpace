@@ -9,7 +9,7 @@ class Profile(models.Model):
     bio = models.TextField(max_length=500, blank=True, help_text="Tell the galaxy about yourself.")
     profileimg = models.ImageField(
         upload_to='profile_images/', 
-        default='default_profile.jpg', 
+        default='default.jpg', 
         help_text="Upload your intergalactic avatar."
     )
     planet = models.CharField(max_length=100, blank=True, help_text="Your home planet.")

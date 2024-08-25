@@ -1,5 +1,63 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-    
+<div class="container">
+    <div class="columns">
+        <!-- Profile Sidebar -->
+        <div class="column is-3">
+            <aside class="menu">
+                <p class="menu-label">Profile</p>
+                <ul class="menu-list">
+                    <li><a href="" class="is-active">{{ user.username }}</a></li>
+                    <li><a href="">Edit Profile</a></li>
+                    <li><a href="">Posts</a></li>
+                </ul>
+            </aside>
+        </div>
+
+        <!-- Profile Details -->
+        <div class="column is-9">
+            <div class="box">
+                <article class="media">
+                    <figure class="media-left">
+                        <p class="image is-128x128">
+                            <img src="{{ profile.profileimg.url }}" alt="{{ user.username }}'s profile picture">
+                        </p>
+                    </figure>
+                    <div class="media-content">
+                        <div class="content">
+                            <h1 class="title">{{ user.username }}</h1>
+                            <p class="subtitle">{{ profile.planet }}, {{ profile.star_system }}</p>
+                            <p><strong>Bio:</strong> {{ profile.bio }}</p>
+                            <p><strong>Species:</strong> {{ profile.species }}</p>
+                            <p><strong>Interests:</strong> {{ profile.interests }}</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <!-- User's Posts -->
+            <div class="box">
+                <h2 class="title is-4">Posts</h2>
+                {% if posts %}
+                    <div class="content">
+                        {% for post in posts %}
+                            <article class="message is-primary">
+                                <div class="message-header">
+                                    <p>{{ post.title }}</p>
+                                    <p class="is-size-7">{{ post.created_at }}</p>
+                                </div>
+                                <div class="message-body">
+                                    {{ post.content }}
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No posts yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
