@@ -9,14 +9,13 @@
 
                     <!-- Messages Section -->
                     {% if messages %}
-                        <div class="notification is-danger">
-                            <button class="delete"></button>
+                        <div class="notification is-danger" id="notification">
+                            <button class="delete" onclick="this.parentElement.style.display='none';"></button>
                             {% for message in messages %}
                                 <p>{{ message }}</p>
                             {% endfor %}
                         </div>
                     {% endif %}
-                    
                     <form method="POST" action="" enctype="multipart/form-data">
                         {% csrf_token %}
 
@@ -48,9 +47,31 @@
                                 <button class="button is-info is-fullwidth">Login</button>
                             </div>
                         </div>
+                        <!-- Sign Up Link -->
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600">
+                                New to WarpSpace? <a href="{% url 'signup_page' %}" class="text-blue-600 hover:text-blue-700 font-semibold">Sign Up here</a>.
+                            </p>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+{% block script %}
+    <script>
+        // Auto-hide the notification after 3 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            var notification = document.getElementById('notification');
+            if (notification) {
+                setTimeout(function() {
+                    notification.style.opacity = '0';
+                    setTimeout(function() {
+                        notification.style.display = 'none';
+                    }, 500); // Delay to match the fade-out duration
+                }, 3000); // Display time in milliseconds
+            }
+        });
+    </script>
 {% endblock %}
