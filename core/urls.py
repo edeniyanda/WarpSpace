@@ -12,5 +12,5 @@ urlpatterns = [
     path('feeds/', views.feeds, name='feeds_page'),
     path('post/', views.create_post, name='create_post'),
     path('like/<int:post_id>/', views.like_post, name='like_post'),
-    path('repost/<int:post_id>/', views.repost, name='repost'),
+    path('repost/<int:post_id>/', views.repost_post, name='repost_post'),
 ]

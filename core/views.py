@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from warperprofile.models import Profile
-from post.models import Post, Like, Repost
+from post.models import Post
 from django.shortcuts import render, get_object_or_404
 from warperprofile.forms import ProfileForm
 from post.forms import PostForm
@@ -96,7 +96,7 @@ def feeds(request):
     form = PostForm()
     return render(request, 'core/feeds.html', {'posts': posts, 'form': form})
 
-@login_required
+@login_required(login_url="login_page")
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
@@ -106,16 +106,20 @@ def create_post(request):
             post.save()
         return redirect('feeds_page')
 
-@login_required
+@login_required(login_url="login_page")
 def like_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    like, created = Like.objects.get_or_create(user=request.user, post=post)
-    if not created:
-        like.delete()  # Unlike if already liked
-    return redirect('feeds_page')
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+    return JsonResponse({'likes': post.like_count()})
 
-@login_required
-def repost(request, post_id):
-    original_post = get_object_or_404(Post, id=post_id)
-    Repost.objects.create(user=request.user, original_post=original_post)
-    return redirect('feeds_page')
+@login_required(login_url="login_page")
+def repost_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user in post.reposts.all():
+        post.reposts.remove(request.user)
+    else:
+        post.reposts.add(request.user)
+    return JsonResponse({'reposts': post.repost_count()})

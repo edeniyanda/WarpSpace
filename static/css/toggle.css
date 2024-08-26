@@ -1,0 +1,14 @@
+/* Default button colors */
+.level-item {
+    color: #4a4a4a;
+}
+
+/* Liked state */
+.level-item.liked {
+    color: #e74c3c; /* Red for like */
+}
+
+/* Reposted state */
+.level-item.reposted {
+    color: #27ae60; /* Green for repost */
+}

@@ -1,5 +1,11 @@
-{% extends 'core/base.html' %}
 
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block additionalstyles %}
+<link rel="stylesheet" href="{% static 'css/toggle.css' %}">
+{% endblock additionalstyles %}
 {% block content %}
 <div class="container">
     <div class="columns is-centered">
@@ -8,14 +14,14 @@
             <div class="box">
                 <form method="POST" action="{% url 'create_post' %}" enctype="multipart/form-data">
                     {% csrf_token %}
-
+                    
                     <!-- Content Field -->
                     <div class="field">
                         <div class="control">
                             {{ form.content }}
                         </div>
                     </div>
-
+                    
                     <!-- Image Upload Field with Preview -->
                     <div class="field">
                         <div class="file has-name is-fullwidth">
@@ -31,14 +37,14 @@
                             </label>
                         </div>
                     </div>
-
+                    
                     <!-- Image Preview -->
                     <div class="field">
                         <figure class="image ">
                             <img id="image-preview" src="#" alt="Image Preview" style="display: none;" class="">
                         </figure>
                     </div>
-
+                    
                     <!-- Submit Button -->
                     <div class="field">
                         <div class="control">
@@ -47,88 +53,157 @@
                     </div>
                 </form>
             </div>
-
-
-        <!-- Feed Posts -->
-        {% for post in posts %}
-            <div class="box">
-                <article class="media">
-                    <div class="media-left">
-                        <figure class="image is-48x48">
-                            <img src="{{ post.user.profile.profileimg.url }}" alt="{{ post.user.username }}" class="is-rounded">
-                        </figure>
-                    </div>
-                    <div class="media-content">
-                        <div class="content">
-                            <p>
-                                <a href="{% url 'profile' post.user.username %}">
-                                    <strong>{{ post.user.username }}</strong>
-                                </a>
-                                <br>
-                                {{ post.content }}
-                                <br>
-                                <small>{{ post.created_at }}</small>
-                            </p>
-                            
-                            <!-- Display Post Image if Exists -->
-                            {% if post.image %}
-                                <figure class="image ">
-                                    <img src="{{ post.image.url }}" alt="Post Image">
-                                </figure>
-                            {% endif %}
+            
+            <!-- Feed Posts -->
+            {% for post in posts %}
+                <div class="box" id="post-{{ post.id }}">
+                    <article class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                                <img src="{{ post.user.profile.profileimg.url }}" alt="{{ post.user.username }}" class="is-rounded">
+                            </figure>
                         </div>
-                        <nav class="level is-mobile">
-                            <div class="level-left">
-                                <a class="level-item" href="{% url 'like_post' post.id %}">
-                                    <span class="icon is-small"><i class="fas fa-heart"></i></span>
-                                    <span>{{ post.likes.count }}</span>
-                                </a>
-                                <a class="level-item" href="{% url 'repost' post.id %}">
-                                    <span class="icon is-small"><i class="fas fa-retweet"></i></span>
-                                    <span>{{ post.reposts.count }}</span>
-                                </a>
+                        <div class="media-content">
+                            <div class="content">
+                                <p>
+                                    <a href="{% url 'profile' post.user.username %}"><strong>{{ post.user.username }}</strong></a>
+                                    <br>
+                                    {{ post.content }}
+                                    <br>
+                                    <small>{{ post.created_at }}</small>
+                                </p>
+                                
+                                {% if post.image %}
+                                    <figure class="image">
+                                        <img src="{{ post.image.url }}" alt="Post Image">
+                                    </figure>
+                                {% endif %}
                             </div>
-                        </nav>
-                    </div>
-                </article>
-            </div>
-        {% endfor %}
-
+                            <nav class="level is-mobile">
+                                <div class="level-left">
+                                    <a class="level-item like-button {% if user in post.likes.all %}liked{% endif %}" 
+                                       href="#" data-id="{{ post.id }}">
+                                        <span class="icon is-small"><i class="fas fa-heart"></i></span>
+                                        <span id="like-count-{{ post.id }}"> {{ post.like_count }}</span>
+                                    </a>
+                                    <a class="level-item repost-button {% if user in post.reposts.all %}reposted{% endif %}" 
+                                       href="#" data-id="{{ post.id }}">
+                                        <span class="icon is-small"><i class="fas fa-retweet"></i></span>
+                                        <p>  </p>
+                                        <span id="repost-count-{{ post.id }}"> {{ post.repost_count }}</span>
+                                    </a>
+                                </div>
+                            </nav>
+                        </div>
+                    </article>
+                </div>
+            {% endfor %}
         </div>
     </div>
 </div>
 {% endblock %}
+
 {% block script %}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Handle file input change and preview image
         const fileInput = document.querySelector('.file-input');
         const fileName = document.getElementById('file-name');
         const imagePreview = document.getElementById('image-preview');
 
         fileInput.addEventListener('change', () => {
             const file = fileInput.files[0];
-
             if (file) {
-                // Show the file name
                 fileName.textContent = file.name;
-
-                // Create a file reader to display the image preview
                 const reader = new FileReader();
-
                 reader.onload = function(e) {
-                    // Set the src of the image preview to the file content
                     imagePreview.src = e.target.result;
-                    imagePreview.style.display = 'block';  // Show the image
-                }
-
+                    imagePreview.style.display = 'block';
+                };
                 reader.readAsDataURL(file);
             } else {
-                // Hide the image preview if no file is selected
                 imagePreview.style.display = 'none';
             }
         });
+
+        // Handle like button clicks
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const postId = this.dataset.id;
+                fetch(`/like/${postId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById(`like-count-${postId}`).textContent = data.likes;
+                });
+            });
+        });
+
+        // Handle repost button clicks
+        document.querySelectorAll('.repost-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const postId = this.dataset.id;
+                fetch(`/repost/${postId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById(`repost-count-${postId}`).textContent = data.reposts;
+                });
+            });
+        });
+        // Like button functionality
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const postId = this.dataset.id;
+                fetch(`/like/${postId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const likeCountElement = document.getElementById(`like-count-${postId}`);
+                    likeCountElement.textContent = data.likes;
+
+                    // Toggle the liked class
+                    this.classList.toggle('liked');
+                });
+            });
+        });
+
+        // Repost button functionality
+        document.querySelectorAll('.repost-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const postId = this.dataset.id;
+                fetch(`/repost/${postId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const repostCountElement = document.getElementById(`repost-count-${postId}`);
+                    repostCountElement.textContent = data.reposts;
+
+                    // Toggle the reposted class
+                    this.classList.toggle('reposted');
+                });
+            });
+        });
     });
 </script>
-
-
 {% endblock %}
