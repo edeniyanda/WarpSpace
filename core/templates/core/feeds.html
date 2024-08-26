@@ -1,12 +1,20 @@
-
 {% extends 'core/base.html' %}
+
 {% load static %}
 
-
 {% block additionalstyles %}
-<link rel="stylesheet" href="{% static 'css/toggle.css' %}">
+    <link rel="stylesheet" href="{% static 'css/feeds.css' %}">
 {% endblock additionalstyles %}
 {% block content %}
+    <!-- Messages Section -->
+    {% if messages %}
+        <div class="notification is-success" id="notification">
+            <button class="delete" onclick="this.parentElement.style.display='none';"></button>
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
 <div class="container">
     <div class="columns is-centered">
         <div class="column is-half">
@@ -89,10 +97,9 @@
                                     <a class="level-item repost-button {% if user in post.reposts.all %}reposted{% endif %}" 
                                        href="#" data-id="{{ post.id }}">
                                         <span class="icon is-small"><i class="fas fa-retweet"></i></span>
-                                        <p>  </p>
                                         <span id="repost-count-{{ post.id }}"> {{ post.repost_count }}</span>
                                     </a>
-                                </div>
+                                </div> 
                             </nav>
                         </div>
                     </article>
@@ -204,6 +211,15 @@
                 });
             });
         });
+        var notification = document.getElementById('notification');
+            if (notification) {
+                setTimeout(function() {
+                    notification.style.opacity = '0';
+                    setTimeout(function() {
+                        notification.style.display = 'none';
+                    }, 500); // Delay to match the fade-out duration
+                }, 3000); // Display time in milliseconds
+            }
     });
 </script>
 {% endblock %}

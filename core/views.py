@@ -104,6 +104,7 @@ def create_post(request):
             post = form.save(commit=False)
             post.user = request.user
             post.save()
+            messages.success(request, "Posted!!!.")
         return redirect('feeds_page')
 
 @login_required(login_url="login_page")

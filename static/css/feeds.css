@@ -1,0 +1,30 @@
+/* Default button colors */
+.level-item {
+    color: #4a4a4a;
+    display: flex;
+    align-items: center; /* Aligns icon and text vertically */
+    margin-right: 10px; /* Adds space between items, adjust as needed */
+}
+
+/* Liked state */
+.level-item.liked {
+    color: #e74c3c; /* Red for like */
+}
+
+/* Reposted state */
+.level-item.reposted {
+    color: #27ae60; /* Green for repost */
+}
+
+.level-left {
+    display: flex;
+    align-items: center; /* Ensures vertical alignment */
+}
+
+.level-item .icon {
+    margin-right: 5px; /* Space between icon and count text, adjust as needed */
+}
+
+.level-item span {
+    font-size: 14px; /* Adjust the font size if needed */
+}
