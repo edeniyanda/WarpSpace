@@ -12,6 +12,8 @@ from post.forms import PostForm
 
 
 def home(request):
+    if request.user.is_authenticated:
+        return redirect("feeds_page")    
     return render(request, "core/home.html", {})
 
 def signin(request):
