@@ -86,3 +86,8 @@ def edit_profile(request):
 
 
     return render(request, 'core/edit_profile.html', {'form': form, "profile" : profile})
+
+
+@login_required(login_url="login_page")
+def feeds_view(request):
+    return render(request, "core/feeds.html", {})

@@ -9,4 +9,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(template_name='core/logout.html'), name='logout_page'),
     path('profile/<str:username>/', views.profile_view, name='profile'),
     path('settings/', views.edit_profile, name='edit_profile'),
+    path('feeds/', views.feeds_view, name='feeds_pgae'),
 ]
