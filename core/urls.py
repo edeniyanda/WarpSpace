@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from . import views
 from django.contrib.auth.views import LogoutView
 
@@ -9,5 +9,8 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(template_name='core/logout.html'), name='logout_page'),
     path('profile/<str:username>/', views.profile_view, name='profile'),
     path('settings/', views.edit_profile, name='edit_profile'),
-    path('feeds/', views.feeds_view, name='feeds_pgae'),
+    path('feeds/', views.feeds, name='feeds_page'),
+    path('post/', views.create_post, name='create_post'),
+    path('like/<int:post_id>/', views.like_post, name='like_post'),
+    path('repost/<int:post_id>/', views.repost, name='repost'),
 ]

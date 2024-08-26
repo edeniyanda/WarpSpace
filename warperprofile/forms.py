@@ -13,3 +13,4 @@ class ProfileForm(forms.ModelForm):
             'species': forms.TextInput(attrs={'class': 'input', 'placeholder': 'Enter your species'}),
             'interests': forms.TextInput(attrs={'class': 'input', 'placeholder': 'Enter your interests'}),
         }
+
