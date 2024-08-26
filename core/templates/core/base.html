@@ -1,122 +1,111 @@
 <!DOCTYPE html>
-
 {% load static %}
+<html lang="en">
+<head>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<html>
-    <head>
-        <!-- Meta -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Title -->
+    <title>WarpSpace</title>
 
-        <!-- Title -->
-        <title>WarpSpace</title>
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block additionalstyles %}{% endblock additionalstyles %}
+</head>
 
-        <!-- Styles -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-        <link rel="stylesheet" href="{% static 'css/main.css' %}">
-        {% block additionalstyles %}
-        {% endblock additionalstyles %}
-    </head>
-
-    <body>
-        <!-- Nav -->
-        <nav class="navbar is-info" role="navigation" aria-label="main navigation">
+<body>
+    <!-- Nav -->
+    <nav class="navbar is-info" role="navigation" aria-label="main navigation">
+        <div class="container">
             <div class="navbar-brand">
-                <a href="/" class="navbar-item"><h1><strong>WarpSpeed</strong></h1></a>
-
+                <a href="/" class="navbar-item">
+                    <h1 class="title has-text-white">WarpSpeed</h1>
+                </a>
+                
                 <!-- Burger Icon for Mobile -->
-                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                 </a>
             </div>
 
-            <div id="navbarBasicExample" class="navbar-menu">
+            <div id="navbarMenu" class="navbar-menu">
                 <div class="navbar-start">
-                    <div class="navbar-item">
-                        <form method="get" action="">
-                            <div class="field has-addons">
-                                <div class="control">
-                                    <input type="text" class="input" placeholder="Search" name="query">
-                                </div>
-                                <div class="control">
-                                    <button class="button is-success">Search</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
                 </div>
 
                 <div class="navbar-end">
+                    <div class="navbar-item">
+                        <form method="get" action="" class="control has-icons-left">
+                            <input type="text" class="input" placeholder="Search..." name="query">
+                            <span class="icon is-left">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </form>
+                    </div>
                     {% if request.user.is_authenticated %}
-                        <a href="" class="navbar-item">Notifications ({{ notifications.count }})</a>
-                        <a href="{% url 'feeds_page' %}" class="navbar-item">Feed</a>
-                        <a href="" class="navbar-item">Conversations</a>
-                        <a href="{% url 'profile' user.username %}" class="navbar-item">Profile</a>
-                    {% endif %}
-
+                    <a href="{% url 'feeds_page' %}" class="navbar-item">Feed</a>
+                    <a href="#" class="navbar-item">Conversations</a>
+                    <a href="#" class="navbar-item">Notifications ({{ notifications.count }})</a>
+                    <a href="{% url 'profile' request.user.username %}" class="navbar-item">Profile</a>
                     <div class="navbar-item">
                         <div class="buttons">
-                            {% if request.user.is_authenticated %}
-                                <!-- Log out Button -->
-                                <a href="{% url 'logout_page' %}" class="button is-danger"
-                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    Log out
-                                </a>
-                    
-                                <!-- Hidden Logout Form -->
-                                <form id="logout-form" action="{% url 'logout_page' %}" method="post" style="display: none;">
-                                    {% csrf_token %}
-                                </form>
-                            {% else %}
-                                <!-- Sign Up and Log In Buttons -->
-                                <a href="{% url 'signup_page' %}" class="button is-success"><strong>Sign up</strong></a>
-                                <a href="{% url 'signin_page' %}" class="button is-light">Log in</a>
-                            {% endif %}
+                            <a href="{% url 'logout_page' %}" class="button is-danger is-light"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                Log out
+                            </a>
+                            <!-- Hidden Logout Form -->
+                            <form id="logout-form" action="{% url 'logout_page' %}" method="post" style="display: none;">
+                                {% csrf_token %}
+                            </form>
                         </div>
                     </div>
+                    {% else %}
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a href="{% url 'signup_page' %}" class="button is-success"><strong>Sign up</strong></a>
+                            <a href="{% url 'signin_page' %}" class="button is-light">Log in</a>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
-        </nav>
-        <!-- End Nav -->
+        </div>
+    </nav>
+    <!-- End Nav -->
 
-        <!-- Content -->
-        <section class="section">
+    <!-- Content -->
+    <section class="section">
+        <div class="container">
             {% block content %}
             {% endblock %}
-        </section>
-        <!-- End Content -->
+        </div>
+    </section>
+    <!-- End Content -->
 
-        <!-- Scripts -->
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        {% block script %}
-        {% endblock %}
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    {% block script %}{% endblock %}
 
-        <!-- Responsive Navbar Script -->
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                // Get all "navbar-burger" elements
-                const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-
-                // Check if there are any navbar burgers
-                if ($navbarBurgers.length > 0) {
-                    // Add a click event on each of them
-                    $navbarBurgers.forEach(el => {
-                        el.addEventListener('click', () => {
-                            // Get the target from the "data-target" attribute
-                            const target = el.dataset.target;
-                            const $target = document.getElementById(target);
-
-                            // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-                            el.classList.toggle('is-active');
-                            $target.classList.toggle('is-active');
-                        });
+    <!-- Responsive Navbar Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navbarBurgers = document.querySelectorAll('.navbar-burger');
+            if (navbarBurgers.length > 0) {
+                navbarBurgers.forEach(el => {
+                    el.addEventListener('click', () => {
+                        const target = el.dataset.target;
+                        const $target = document.getElementById(target);
+                        el.classList.toggle('is-active');
+                        $target.classList.toggle('is-active');
                     });
-                }
-            });
-        </script>
-        <!-- End Scripts -->
-    </body>
+                });
+            }
+        });
+    </script>
+    <!-- End Scripts -->
+</body>
 </html>

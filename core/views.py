@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib import messages, auth
@@ -124,3 +125,17 @@ def repost_post(request, post_id):
     else:
         post.reposts.add(request.user)
     return JsonResponse({'reposts': post.repost_count()})
+
+@login_required
+def follow_unfollow(request, username):
+    target_user = get_object_or_404(User, username=username)
+    target_profile = target_user.profile
+
+    if request.user in target_profile.followers.all():
+        target_profile.followers.remove(request.user)
+        messages.success(request, f'You have unfollowed {target_user.username}.')
+    else:
+        target_profile.followers.add(request.user)
+        messages.success(request, f'You are now following {target_user.username}.')
+
+    return redirect(reverse('profile', kwargs={'username': username}))

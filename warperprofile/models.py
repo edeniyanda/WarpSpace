@@ -22,8 +22,11 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
-    def total_followers(self):
+    def followers_count(self):
         return self.followers.count()
+
+    def following_count(self):
+        return self.user.following.count()
 
     class Meta:
         verbose_name = "Profile"

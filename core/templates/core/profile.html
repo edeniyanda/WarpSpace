@@ -11,6 +11,7 @@
             {% endfor %}
         </div>
     {% endif %}
+
     <div class="columns">
         <!-- Profile Sidebar -->
         <div class="column is-3">
@@ -37,13 +38,35 @@
                     </figure>
                     <div class="media-content">
                         <div class="content">
-                            <h1 class="title">{{ user.username }}</h1>
-                            <p class="subtitle">{{ profile.planet }}, {{ profile.star_system }}</p>
+                            <h1 class="title">{{ user.first_name }} {{ user.last_name }}</h1>
+                            <p class="subtitle">@{{ user.username }}</p>
                             <p><strong>Bio:</strong> {{ profile.bio }}</p>
                             <p><strong>Species:</strong> {{ profile.species }}</p>
                             <p><strong>Interests:</strong> {{ profile.interests }}</p>
                         </div>
+                        <div class="columns is-mobile">
+                            <div class="column has-text-centered">
+                                <p><strong>{{ profile.followers_count }}</strong><br>Followers</p>
+                            </div>
+                            <div class="column has-text-centered">
+                                <p><strong>{{ profile.following_count }}</strong><br>Following</p>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Follow Button -->
+                    {% if request.user != user %}
+                    <div class="media-right">
+                        <form method="post" action="{% url 'follow_unfollow' user.username %}">
+                            {% csrf_token %}
+                            {% if request.user in profile.followers.all %}
+                            <button class="button is-danger">Unfollow</button>
+                            {% else %}
+                            <button class="button is-success">Follow</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                    {% endif %}
                 </article>
             </div>
 
@@ -71,20 +94,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-{% block script %}
-    <script>
-        // Auto-hide the notification after 5 seconds
-        document.addEventListener('DOMContentLoaded', function() {
-            var notification = document.getElementById('notification');
-            if (notification) {
-                setTimeout(function() {
-                    notification.style.opacity = '0';
-                    setTimeout(function() {
-                        notification.style.display = 'none';
-                    }, 500); // Delay to match the fade-out duration
-                }, 3000); // Display time in milliseconds
-            }
-        });
-    </script>
 {% endblock %}
