@@ -99,12 +99,12 @@ def feeds(request):
 @login_required
 def create_post(request):
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.user = request.user
             post.save()
-        return redirect('feeds')
+        return redirect('feeds_page')
 
 @login_required
 def like_post(request, post_id):
@@ -112,10 +112,10 @@ def like_post(request, post_id):
     like, created = Like.objects.get_or_create(user=request.user, post=post)
     if not created:
         like.delete()  # Unlike if already liked
-    return redirect('feeds')
+    return redirect('feeds_page')
 
 @login_required
 def repost(request, post_id):
     original_post = get_object_or_404(Post, id=post_id)
     Repost.objects.create(user=request.user, original_post=original_post)
-    return redirect('feeds')
+    return redirect('feeds_page')
