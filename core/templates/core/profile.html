@@ -56,7 +56,7 @@
                                 <!-- Followers and Following -->
                                 <div class="columns is-mobile is-centered">
                                     <div class="column has-text-centered">
-                                        <p><strong>{{ profile.followers_count }}</strong><br>Followers</p>
+                                        <p><strong><a href="{% url 'followers_list' user.username %}">{{ profile.followers_count }}</a></strong><br>Followers</p>
                                     </div>
                                     <div class="column has-text-centered">
                                         <p><strong>{{ profile.following_count }}</strong><br>Following</p>

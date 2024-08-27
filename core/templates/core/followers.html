@@ -1,0 +1,50 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="columns is-centered">
+        <div class="column is-8">
+            <div class="box">
+                <h2 class="title is-4">{{ user.username }}'s Followers</h2>
+                <ul>
+                    {% for follower in followers %}
+                        <article class="media">
+                            <figure class="media-left">
+                                <p class="image is-64x64">
+                                    <img src="{{ follower.profile.profileimg.url }}" class="is-rounded" alt="{{ follower.username }}'s profile picture">
+                                </p>
+                            </figure>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        @<a href="{% url 'profile' follower.username %}"><strong>{{ follower.username }}</strong></a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="media-right">
+                                <div class="content">
+                                    {% if request.user != follower %}
+                                        <form method="post" action="{% url 'follow_unfollow' follower.username %}">
+                                            {% csrf_token %}
+                                            {% if follower in request.user.profile.following.all %}
+                                                <button class="button is-danger is-small">Unfollow</button>
+                                            {% elif request.user in follower.profile.followers.all %}
+                                                <button class="button is-success is-small">Follow Back</button>
+                                            {% else %}
+                                                <button class="button is-primary is-small">Follow</button>
+                                            {% endif %}
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </article>
+                        <hr>
+                    {% empty %}
+                    <p>{{ user.username }} has no followers yet.</p>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

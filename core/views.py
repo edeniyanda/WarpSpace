@@ -141,3 +141,14 @@ def follow_unfollow(request, username):
         messages.success(request, f'You are now following {target_user.username}.')
 
     return redirect(reverse('profile', kwargs={'username': username}))
+
+
+@login_required
+def followers_list(request, username):
+    user = get_object_or_404(User, username=username)
+    followers = user.profile.followers.all()
+    context = {
+        'user': user,
+        'followers': followers
+    }
+    return render(request, 'core/followers.html', context)
