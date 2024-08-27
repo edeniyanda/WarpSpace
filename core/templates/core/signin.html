@@ -3,38 +3,39 @@
 {% block content %}
     <div class="container">
         <div class="columns is-centered">
-            <div class="column is-half">
-                <div class="box">
-                    <h1 class="title has-text-centered has-text-info">Login WarpSpace Account</h1>
+            <div class="column is-6-tablet is-5-desktop is-4-widescreen">
+                <div class="box has-shadow">
+                    <h1 class="title has-text-centered has-text-dark is-size-3">Sign In</h1>
 
-                    <!-- Messages Section -->
+                    <!-- Notification Messages -->
                     {% if messages %}
-                        <div class="notification is-danger" id="notification">
+                        <div class="notification is-danger is-light" id="notification">
                             <button class="delete" onclick="this.parentElement.style.display='none';"></button>
                             {% for message in messages %}
                                 <p>{{ message }}</p>
                             {% endfor %}
                         </div>
                     {% endif %}
+
                     <form method="POST" action="" enctype="multipart/form-data">
                         {% csrf_token %}
 
-                        <!-- Username -->
+                        <!-- Username Field -->
                         <div class="field">
                             <label for="username" class="label">Username</label>
                             <div class="control has-icons-left">
-                                <input type="text" name="username" id="username" class="input" placeholder="johndoe123" required>
+                                <input type="text" name="username" id="username" class="input" placeholder="Enter your username" required>
                                 <span class="icon is-small is-left">
-                                    <i class="fas fa-user-tag"></i>
+                                    <i class="fas fa-user"></i>
                                 </span>
                             </div>
                         </div>
 
-                        <!-- Password -->
+                        <!-- Password Field -->
                         <div class="field">
                             <label for="password" class="label">Password</label>
                             <div class="control has-icons-left">
-                                <input type="password" name="password" id="password" class="input" placeholder="********" required>
+                                <input type="password" name="password" id="password" class="input" placeholder="Enter your password" required>
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-lock"></i>
                                 </span>
@@ -44,21 +45,21 @@
                         <!-- Submit Button -->
                         <div class="field">
                             <div class="control">
-                                <button class="button is-info is-fullwidth">Login</button>
+                                <button class="button is-fullwidth is-primary">Sign In</button>
                             </div>
                         </div>
+
                         <!-- Sign Up Link -->
-                        <div class="text-center">
-                            <p class="text-sm text-gray-600">
-                                New to WarpSpace? <a href="{% url 'signup_page' %}" class="text-blue-600 hover:text-blue-700 font-semibold">Sign Up here</a>.
-                            </p>
-                        </div>
+                        <p class="has-text-centered mt-3">
+                            <small>Don't have an account? <a href="{% url 'signup_page' %}" class="has-text-primary">Sign up here</a>.</small>
+                        </p>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 {% endblock %}
+
 {% block script %}
     <script>
         // Auto-hide the notification after 3 seconds
