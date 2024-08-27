@@ -1,3 +1,7 @@
+#Media files
+./media/post_images/*
+./media/profile_images/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
