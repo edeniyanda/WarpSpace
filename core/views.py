@@ -177,12 +177,3 @@ def following_list(request, username):
     }
     return render(request, 'core/followers.html', context)
 
-@login_required
-def followering_list(request, username):
-    user = get_object_or_404(User, username=username)
-    followers = user.profile.followers.all()
-    context = {
-        'user': user,
-        'followers': followers
-    }
-    return render(request, 'core/followers.html', context)

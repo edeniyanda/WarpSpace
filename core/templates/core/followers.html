@@ -21,22 +21,40 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="media-right">
-                                <div class="content">
-                                    {% if request.user != follower %}
-                                        <form method="post" action="{% url 'follow_unfollow' follower.username %}">
-                                            {% csrf_token %}
-                                            {% if follower in request.user.profile.followers.all and request.user not in follower.profile.followers.all %}
-                                            <button class="button is-success is-small">Follow Back</button>
-                                            {% elif request.user in follower.profile.followers.all %}
-                                            <button class="button is-danger is-small">Unfollow</button>
-                                            {% else %}
-                                                <button class="button is-primary is-small">Follow</button>
-                                            {% endif %}
-                                        </form>
-                                    {% endif %}
-                                </div>
-                            </div>
+
+                            {% if request.user != follower %}
+                                <div class="media-right">
+                                    {% if list_type == 'following' %}
+                                        <div class="content">
+                                                <form method="post" action="{% url 'follow_unfollow' follower.username %}">
+                                                    {% csrf_token %}
+                                                    {% if follower in request.user.profile.followers.all and request.user not in follower.profile.followers.all %}
+                                                    <button class="button is-success is-small">Follow Back</button>
+                                                    {% elif request.user in follower.profile.followers.all %}
+                                                    <button class="button is-danger is-small">Unfollow</button>
+                                                    {% else %}
+                                                        <button class="button is-primary is-small">Follow</button>
+                                                    {% endif %}
+                                                </form>
+                                            </div>
+                                            {% elif list_type == 'followers' %}
+                                            <div class="content">
+                                                {% if request.user != follower %}
+                                                <form method="post" action="{% url 'follow_unfollow' follower.username %}">
+                                                    {% csrf_token %}
+                                                    {% if follower in request.user.profile.followers.all and request.user not in follower.profile.followers.all %}
+                                                    <button class="button is-success is-small">Follow Back</button>
+                                                    {% elif request.user in follower.profile.followers.all %}
+                                                    <button class="button is-danger is-small">Unfollow</button>
+                                                    {% else %}
+                                                    <button class="button is-primary is-small">Follow</button>
+                                                    {% endif %}
+                                                </form>
+                                                {% endif %}
+                                            </div>
+                                            {%endif%}
+                                        </div>
+                                        {% endif %}
                         </article>
                         <hr>
                     {% empty %}
