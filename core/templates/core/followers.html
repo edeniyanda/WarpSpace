@@ -5,7 +5,7 @@
     <div class="columns is-centered">
         <div class="column is-8">
             <div class="box">
-                <h2 class="title is-4">{{ user.username }}'s Followers</h2>
+                <h2 class="title is-4">{{ user.username }}'s {% if list_type == 'following' %}Following{% else %}Followers{% endif %}</h2>
                 <ul>
                     {% for follower in followers %}
                         <article class="media">

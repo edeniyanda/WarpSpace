@@ -59,7 +59,7 @@
                                         <p><strong><a href="{% url 'followers_list' user.username %}">{{ profile.followers_count }}</a></strong><br>Followers</p>
                                     </div>
                                     <div class="column has-text-centered">
-                                        <p><strong>{{ profile.following_count }}</strong><br>Following</p>
+                                        <p><strong><a href="{% url 'followings_list' user.username %}">{{ profile.following_count }}</a></strong><br>Following</p>
                                     </div>
                                 </div>
                             </div>

@@ -158,6 +158,31 @@ def followers_list(request, username):
     followers = user.profile.followers.all()
     context = {
         'user': user,
+        'followers': followers,
+        'list_type': 'follower'
+
+    }
+    return render(request, 'core/followers.html', context)
+
+@login_required
+def following_list(request, username):
+    user = get_object_or_404(User, username=username)
+    following_profiles = user.following.all()  # Users that this user is following
+    # Extract the User objects from the Profile objects
+    following_users = [profile.user for profile in following_profiles]
+    context = {
+        'user': user,
+        'followers': following_users,  # Passed 'following' as 'followers' to reuse the template
+        'list_type': 'following'  # To differentiate between followers and following
+    }
+    return render(request, 'core/followers.html', context)
+
+@login_required
+def followering_list(request, username):
+    user = get_object_or_404(User, username=username)
+    followers = user.profile.followers.all()
+    context = {
+        'user': user,
         'followers': followers
     }
     return render(request, 'core/followers.html', context)
