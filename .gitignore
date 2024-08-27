@@ -1,6 +1,6 @@
 #Media files
-./media/post_images/*
-./media/profile_images/*
+/media/post_images/*
+/media/profile_images/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
