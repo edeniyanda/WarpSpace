@@ -66,12 +66,12 @@ def signup(request):
 def profile_view(request, username):
     user = get_object_or_404(User, username=username)
     profile = get_object_or_404(Profile, user=user)
-    # posts = Post.objects.filter(author=user)  
+    posts = Post.objects.filter(user=user)  
 
     context = {
         'user': user,
         'profile': profile,
-        # 'posts': posts
+        'posts': posts
     }
 
     return render(request, 'core/profile.html', context)

@@ -1,5 +1,10 @@
 {% extends 'core/base.html' %}
 
+{% load static %}
+{% block additionalstyles %}
+    <link rel="stylesheet" href="{% static 'css/feeds.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock additionalstyles %}
 {% block content %}
 <div class="container">
     <!-- Messages Section -->
@@ -31,42 +36,60 @@
         <div class="column is-9">
             <div class="box">
                 <article class="media">
-                    <figure class="media-left">
-                        <p class="image is-128x128">
-                            <img src="{{ profile.profileimg.url }}" class="is-rounded" alt="{{ user.username }}'s profile picture">
-                        </p>
-                    </figure>
                     <div class="media-content">
-                        <div class="content">
-                            <h1 class="title">{{ user.first_name }} {{ user.last_name }}</h1>
-                            <p class="subtitle">@{{ user.username }}</p>
-                            <p><strong>Bio:</strong> {{ profile.bio }}</p>
-                            <p><strong>Species:</strong> {{ profile.species }}</p>
-                            <p><strong>Interests:</strong> {{ profile.interests }}</p>
-                        </div>
-                        <div class="columns is-mobile">
-                            <div class="column has-text-centered">
-                                <p><strong>{{ profile.followers_count }}</strong><br>Followers</p>
+                        <div class="columns is-mobile is-multiline">
+                            <!-- Profile Image -->
+                            <div class="column is-full-mobile is-one-quarter-desktop">
+                                <figure class="image is-square">
+                                    <img src="{{ profile.profileimg.url }}" class="is-rounded" alt="{{ user.username }}'s profile picture">
+                                </figure>
                             </div>
-                            <div class="column has-text-centered">
-                                <p><strong>{{ profile.following_count }}</strong><br>Following</p>
+                            <!-- User Details -->
+                            <div class="column is-full-mobile is-three-quarters-desktop">
+                                <div class="content">
+                                    <h1 class="title is-4">{{ user.first_name }} {{ user.last_name }}</h1>
+                                    <p class="subtitle is-6">@{{ user.username }}</p>
+                                    <p><strong>Bio:</strong> {{ profile.bio }}</p>
+                                    <p><strong>Species:</strong> {{ profile.species }}</p>
+                                    <p><strong>Interests:</strong> {{ profile.interests }}</p>
+                                </div>
+                                <!-- Followers and Following -->
+                                <div class="columns is-mobile is-centered">
+                                    <div class="column has-text-centered">
+                                        <p><strong>{{ profile.followers_count }}</strong><br>Followers</p>
+                                    </div>
+                                    <div class="column has-text-centered">
+                                        <p><strong>{{ profile.following_count }}</strong><br>Following</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <!-- Follow Button -->
+                        {% if request.user != user %}
+                        <div class="media-right is-hidden-touch">
+                            <form method="post" action="{% url 'follow_unfollow' user.username %}">
+                                {% csrf_token %}
+                                {% if request.user in profile.followers.all %}
+                                <button class="button is-danger ">Unfollow</button>
+                                {% else %}
+                                <button class="button is-success ">Follow</button>
+                                {% endif %}
+                            </form>
+                        </div>
 
-                    <!-- Follow Button -->
-                    {% if request.user != user %}
-                    <div class="media-right">
-                        <form method="post" action="{% url 'follow_unfollow' user.username %}">
-                            {% csrf_token %}
-                            {% if request.user in profile.followers.all %}
-                            <button class="button is-danger">Unfollow</button>
-                            {% else %}
-                            <button class="button is-success">Follow</button>
-                            {% endif %}
-                        </form>
-                    </div>
-                    {% endif %}
+                        <!-- Follow Button for Mobile -->
+                        <div class="column is-full is-hidden-desktop">
+                            <form method="post" action="{% url 'follow_unfollow' user.username %}">
+                                {% csrf_token %}
+                                {% if request.user in profile.followers.all %}
+                                <button class="button is-danger is-fullwidth">Unfollow</button>
+                                {% else %}
+                                <button class="button is-success is-fullwidth">Follow</button>
+                                {% endif %}
+                            </form>
+                        </div>
+                        {% endif %}
+
                 </article>
             </div>
 
@@ -74,24 +97,148 @@
             <div class="box">
                 <h2 class="title is-4">Posts</h2>
                 {% if posts %}
-                    <div class="content">
-                        {% for post in posts %}
-                            <article class="message is-primary">
-                                <div class="message-header">
-                                    <p>{{ post.title }}</p>
-                                    <p class="is-size-7">{{ post.created_at }}</p>
+                <div class="content">
+                    <!-- Feed Posts -->
+                    {% for post in posts %}
+                    <div class="box" id="post-{{ post.id }}">
+                        <article class="media">
+                            <div class="media-left">
+                                <figure class="image is-48x48">
+                                    <img src="{{ post.user.profile.profileimg.url }}" alt="{{ post.user.username }}" class="is-rounded">
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <a href="{% url 'profile' post.user.username %}"><strong>{{ post.user.username }}</strong></a>
+                                        <br>
+                                        {{ post.content }}
+                                        <br>
+                                        <small>{{ post.created_at }}</small>
+                                    </p>
+                                    
+                                    {% if post.image %}
+                                    <figure class="image is-3by2">
+                                        <img src="{{ post.image.url }}" alt="Post Image">
+                                    </figure>
+                                    {% endif %}
                                 </div>
-                                <div class="message-body">
-                                    {{ post.content }}
-                                </div>
-                            </article>
-                        {% endfor %}
+                                <nav class="level is-mobile">
+                                    <div class="level-left">
+                                        <a class="level-item like-button {% if user in post.likes.all %}liked{% endif %}" 
+                                        href="#" data-id="{{ post.id }}">
+                                            <span class="icon is-small"><i class="fas fa-heart"></i></span>
+                                            <span id="like-count-{{ post.id }}"> {{ post.like_count }}</span>
+                                        </a>
+                                        <a class="level-item repost-button {% if user in post.reposts.all %}reposted{% endif %}" 
+                                        href="#" data-id="{{ post.id }}">
+                                            <span class="icon is-small"><i class="fas fa-retweet"></i></span>
+                                            <span id="repost-count-{{ post.id }}"> {{ post.repost_count }}</span>
+                                        </a>
+                                    </div> 
+                                </nav>
+                            </div>
+                        </article>
                     </div>
+                    {% endfor %}
+                </div>
                 {% else %}
-                    <p>No posts yet.</p>
+                <p>No posts yet.</p>
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const postId = this.dataset.id;
+                fetch(`/like/${postId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById(`like-count-${postId}`).textContent = data.likes;
+                });
+            });
+        });
+
+        // Handle repost button clicks
+        document.querySelectorAll('.repost-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const postId = this.dataset.id;
+                fetch(`/repost/${postId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById(`repost-count-${postId}`).textContent = data.reposts;
+                });
+            });
+        });
+        // Like button functionality
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const postId = this.dataset.id;
+                fetch(`/like/${postId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const likeCountElement = document.getElementById(`like-count-${postId}`);
+                    likeCountElement.textContent = data.likes;
+
+                    // Toggle the liked class
+                    this.classList.toggle('liked');
+                });
+            });
+        });
+
+        // Repost button functionality
+        document.querySelectorAll('.repost-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const postId = this.dataset.id;
+                fetch(`/repost/${postId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const repostCountElement = document.getElementById(`repost-count-${postId}`);
+                    repostCountElement.textContent = data.reposts;
+
+                    // Toggle the reposted class
+                    this.classList.toggle('reposted');
+                });
+            });
+        });
+        var notification = document.getElementById('notification');
+            if (notification) {
+                setTimeout(function() {
+                    notification.style.opacity = '0';
+                    setTimeout(function() {
+                        notification.style.display = 'none';
+                    }, 500); // Delay to match the fade-out duration
+                }, 3000); // Display time in milliseconds
+            }
+    });
+</script>
 {% endblock %}

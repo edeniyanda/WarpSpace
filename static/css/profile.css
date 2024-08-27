@@ -1,0 +1,14 @@
+@media (max-width: 768px) {
+    .media-right {
+        margin-top: 15px;
+    }
+
+    .columns.is-centered {
+        margin-top: 15px;
+    }
+    
+    .column.is-full.is-hidden-desktop {
+        margin-top: 10px;
+        text-align: center;
+    }
+}
