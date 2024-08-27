@@ -67,11 +67,20 @@ def profile_view(request, username):
     user = get_object_or_404(User, username=username)
     profile = get_object_or_404(Profile, user=user)
     posts = Post.objects.filter(user=user)  
+    current_user = request.user
+
+    # Check if the current user follows the profile
+    is_following = profile.followers.filter(id=current_user.id).exists()
+
+    # Check if the profile owner follows the current user (for follow back logic)
+    follow_back = current_user.profile.followers.filter(id=profile.user.id).exists()
 
     context = {
         'user': user,
         'profile': profile,
-        'posts': posts
+        'posts': posts,
+        "is_following": is_following,
+        "follow_back": follow_back,
     }
 
     return render(request, 'core/profile.html', context)

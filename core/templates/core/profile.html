@@ -66,28 +66,30 @@
                         </div>
                         <!-- Follow Button -->
                         {% if request.user != user %}
-                        <div class="media-right is-hidden-touch">
-                            <form method="post" action="{% url 'follow_unfollow' user.username %}">
-                                {% csrf_token %}
-                                {% if request.user in profile.followers.all %}
-                                <button class="button is-danger ">Unfollow</button>
-                                {% else %}
-                                <button class="button is-success ">Follow</button>
-                                {% endif %}
-                            </form>
-                        </div>
+                            <div class="media-right is-hidden-touch">
+                                <form method="post" action="{% url 'follow_unfollow' user.username %}">
+                                    {% csrf_token %}
+                                    {% if is_following %}
+                                        <button class="button is-danger">Unfollow</button>
+                                    {% elif  follow_back%}
+                                        <button class="button is-success">Follow Back</button>
+                                        {% else %}
+                                        <button class="button is-success">Follow</button>
+                                    {% endif %}
+                                </form>
+                            </div>
 
-                        <!-- Follow Button for Mobile -->
-                        <div class="column is-full is-hidden-desktop">
-                            <form method="post" action="{% url 'follow_unfollow' user.username %}">
-                                {% csrf_token %}
-                                {% if request.user in profile.followers.all %}
-                                <button class="button is-danger is-fullwidth">Unfollow</button>
-                                {% else %}
-                                <button class="button is-success is-fullwidth">Follow</button>
-                                {% endif %}
-                            </form>
-                        </div>
+                            <!-- Follow Button for Mobile -->
+                            <div class="column is-full is-hidden-desktop">
+                                <form method="post" action="{% url 'follow_unfollow' user.username %}">
+                                    {% csrf_token %}
+                                    {% if request.user in profile.followers.all %}
+                                    <button class="button is-danger is-fullwidth">Unfollow</button>
+                                    {% else %}
+                                    <button class="button is-success is-fullwidth">Follow</button>
+                                    {% endif %}
+                                </form>
+                            </div>
                         {% endif %}
 
                 </article>
