@@ -1,64 +1,75 @@
 {% extends 'core/base.html' %}
-
+{% load humanize %}
 
 {% block content %}
-    <div class="container">
-        <div class="columns">
-            <div class="column is-12">
-                <h1 class="title">Search</h1>
+<div class="container">
+    <div class="columns is-centered">
+        <div class="column is-8">
+            <h1 class="title">Search Results</h1>
 
-                <p>Search term: "{{ query }}"</p>
-
-                <hr>
-
-                <form method="get" action="{% url 'search' %}">
-                    <div class="field">
-                        <div class="control">
-                            <input type="text" class="input" name="query" value="{{ query }}">
-                        </div>
+            <form method="GET" action="{% url 'search_page' %}">
+                <div class="field has-addons">
+                    <div class="control is-expanded">
+                        <input type="text" class="input" name="query" placeholder="Search..." value="{{ query }}">
                     </div>
-
-                    <div class="field">
-                        <div class="control">
-                            <button class="button is-success">Search</button>
-                        </div>
+                    <div class="control">
+                        <button class="button is-info">Search</button>
                     </div>
-                </form>
+                </div>
+            </form>
 
-                <hr>
+            <hr>
 
-                <div class="search-results">
-                    {% if not warpers and not warps %}
-                        <p>No results, please try a different search term..</p>
-                    {% endif %}
-                    
-                    {% if warpers %}
-                        <strong>warpers</strong>
+            <div class="search-results">
+                {% if not warpers and not warps %}
+                    <p class="has-text-centered">No results found for "{{ query }}". Please try a different search term.</p>
+                {% endif %}
 
-                        {% for warper in warpers %}
-                            <p><a href="{% url 'profile' warper.username %}">{{ oinker.username }}</a></p>
-                        {% endfor %}
-                    {% endif %}
-
-                    {% if warps %}
-                        <strong>Warps</strong>
-
-                        <div class="wrapper-oinks">
-                            {% for warp in warps %}
-                            <div class="oink">
-                                <article class="media">
+                {% if warpers %}
+                    <div class="box">
+                        <h2 class="subtitle">Profiles</h2>
+                        <div class="content">
+                            {% for warper in warpers %}
+                                <div class="media">
                                     <figure class="media-left">
                                         <p class="image is-64x64">
-                                            {% if oink.created_by.oinkerprofile.avatar %}
-                                                <img src="{{ warp.user.profile.profileimg.url }}">
+                                            {% if warper.profile.profileimg %}
+                                                <img src="{{ warper.profile.profileimg.url }}" alt="{{ warper.username }}">
                                             {% endif %}
                                         </p>
                                     </figure>
-    
+                                    <div class="media-content">
+                                        <p>
+                                            <strong><a href="{% url 'profile' warper.username %}">{{ warper.username }}</a></strong>
+                                            <br>
+                                            <small>{{ warper.profile.bio|default:"No bio available." }}</small>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if warps %}
+                    <div class="box">
+                        <h2 class="subtitle">Posts</h2>
+                        <div class="content">
+                            {% for warp in warps %}
+                                <article class="media">
+                                    <figure class="media-left">
+                                        <p class="image is-64x64">
+                                            {% if warp.user.profile.profileimg %}
+                                                <img src="{{ warp.user.profile.profileimg.url }}" alt="{{ warp.user.username }}">
+                                            {% endif %}
+                                        </p>
+                                    </figure>
                                     <div class="media-content">
                                         <div class="content">
                                             <p>
-                                                <strong><a href="{% url 'profile' warp.user.profile.username %}">{{ warp.user.profile.username }}</a></strong>
+                                                <strong><a href="{% url 'profile' warp.user.username %}">{{ warp.user.username }}</a></strong>
+                                                <br>
                                                 <small>{{ warp.created_at|naturaltime }}</small>
                                                 <br>
                                                 {{ warp.content }}
@@ -66,12 +77,13 @@
                                         </div>
                                     </div>
                                 </article>
-                            </div>
+                                <hr>
                             {% endfor %}
                         </div>
-                    {% endif %}
-                </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

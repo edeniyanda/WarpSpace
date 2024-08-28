@@ -1,6 +1,7 @@
 {% extends 'core/base.html' %}
 
 {% load static %}
+{% load humanize %}
 
 {% block additionalstyles %}
     <link rel="stylesheet" href="{% static 'css/feeds.css' %}">
@@ -78,7 +79,7 @@
                                     <br>
                                     {{ post.content }}
                                     <br>
-                                    <small>{{ post.created_at }}</small>
+                                    <small>{{ post.created_at|naturaltime }}</small>
                                 </p>
                                 
                                 {% if post.image %}

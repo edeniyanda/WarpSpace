@@ -178,7 +178,7 @@ def following_list(request, username):
     return render(request, 'core/followers.html', context)
 
 def search(request):
-    query = request.GET.get("query", "")
+    query = request.GET.get("query", "query") if request.GET.get("query", "query") != None else ""
 
     if len(query) > 0:
         warpers = User.objects.filter(username__icontains=query)
@@ -193,4 +193,4 @@ def search(request):
         "warps" : warps,
     }
 
-    return redirect(request, "core/search.html", context)
+    return render(request, "core/search.html", context)
