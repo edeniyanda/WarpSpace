@@ -177,3 +177,20 @@ def following_list(request, username):
     }
     return render(request, 'core/followers.html', context)
 
+def search(request):
+    query = request.GET.get("query", "")
+
+    if len(query) > 0:
+        warpers = User.objects.filter(username__icontains=query)
+        warps = Post.objects.filter(content__icontains=query)
+    else:
+        warpers = []
+        warps = []
+
+    context = {
+        'query': query,
+        "warpers" : warpers,
+        "warps" : warps,
+    }
+
+    return redirect(request, "core/search.html", context)

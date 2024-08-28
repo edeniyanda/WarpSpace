@@ -16,4 +16,5 @@ urlpatterns = [
     path('like/<int:post_id>/', views.like_post, name='like_post'),
     path('repost/<int:post_id>/', views.repost_post, name='repost_post'),
     path('follow/<str:username>/', views.follow_unfollow, name='follow_unfollow'),
+    path('search/', views.search, name='search_page'),
 ]

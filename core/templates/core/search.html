@@ -1,0 +1,77 @@
+{% extends 'core/base.html' %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="columns">
+            <div class="column is-12">
+                <h1 class="title">Search</h1>
+
+                <p>Search term: "{{ query }}"</p>
+
+                <hr>
+
+                <form method="get" action="{% url 'search' %}">
+                    <div class="field">
+                        <div class="control">
+                            <input type="text" class="input" name="query" value="{{ query }}">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-success">Search</button>
+                        </div>
+                    </div>
+                </form>
+
+                <hr>
+
+                <div class="search-results">
+                    {% if not warpers and not warps %}
+                        <p>No results, please try a different search term..</p>
+                    {% endif %}
+                    
+                    {% if warpers %}
+                        <strong>warpers</strong>
+
+                        {% for warper in warpers %}
+                            <p><a href="{% url 'profile' warper.username %}">{{ oinker.username }}</a></p>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if warps %}
+                        <strong>Warps</strong>
+
+                        <div class="wrapper-oinks">
+                            {% for warp in warps %}
+                            <div class="oink">
+                                <article class="media">
+                                    <figure class="media-left">
+                                        <p class="image is-64x64">
+                                            {% if oink.created_by.oinkerprofile.avatar %}
+                                                <img src="{{ warp.user.profile.profileimg.url }}">
+                                            {% endif %}
+                                        </p>
+                                    </figure>
+    
+                                    <div class="media-content">
+                                        <div class="content">
+                                            <p>
+                                                <strong><a href="{% url 'profile' warp.user.profile.username %}">{{ warp.user.profile.username }}</a></strong>
+                                                <small>{{ warp.created_at|naturaltime }}</small>
+                                                <br>
+                                                {{ warp.content }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
