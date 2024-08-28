@@ -149,7 +149,8 @@ def follow_unfollow(request, username):
         target_profile.followers.add(request.user)
         messages.success(request, f'You are now following {target_user.username}.')
 
-    return redirect(reverse('profile', kwargs={'username': username}))
+    return redirect("/")
+    # return redirect(reverse('profile', kwargs={'username': username}))
 
 
 @login_required
@@ -183,6 +184,7 @@ def search(request):
     if len(query) > 0:
         warpers = User.objects.filter(username__icontains=query)
         warps = Post.objects.filter(content__icontains=query)
+        messages.success(request, "We found something....")
     else:
         warpers = []
         warps = []

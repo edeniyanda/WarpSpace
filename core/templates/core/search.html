@@ -1,7 +1,17 @@
 {% extends 'core/base.html' %}
+{% load static %}
 {% load humanize %}
 
 {% block content %}
+<!-- Messages Section -->
+{% if messages %}
+    <div class="notification is-success" id="notification">
+        <button class="delete" onclick="this.parentElement.style.display='none';"></button>
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
 <div class="container">
     <div class="columns is-centered">
         <div class="column is-8">
@@ -100,4 +110,7 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'js/messagebar.js' %}"></script>
 {% endblock %}
