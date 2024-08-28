@@ -159,7 +159,7 @@ def followers_list(request, username):
     context = {
         'user': user,
         'followers': followers,
-        'list_type': 'follower'
+        'list_type': 'followers'
 
     }
     return render(request, 'core/followers.html', context)
