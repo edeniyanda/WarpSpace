@@ -45,6 +45,20 @@
                                             <small>{{ warper.profile.bio|default:"No bio available." }}</small>
                                         </p>
                                     </div>
+                                    <figure class="media-righy">
+                                        {% if request.user != warper %}
+                                        <form method="post" action="{% url 'follow_unfollow' warper.username %}">
+                                            {% csrf_token %}
+                                            {% if warper in request.user.profile.followers.all and request.user not in warper.profile.followers.all %}
+                                            <button class="button is-success is-small">Follow Back</button>
+                                            {% elif request.user in warper.profile.followers.all %}
+                                            <button class="button is-danger is-small">Unfollow</button>
+                                            {% else %}
+                                            <button class="button is-primary is-small">Follow</button>
+                                            {% endif %}
+                                        </form>
+                                        {% endif %}
+                                    </figure>
                                 </div>
                                 <hr>
                             {% endfor %}
