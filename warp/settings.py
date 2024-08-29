@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     "core",
     "warperprofile",
-    "post"
+    "post",
+    "conversations"
 ]
 
 MIDDLEWARE = [
