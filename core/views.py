@@ -149,7 +149,10 @@ def follow_unfollow(request, username):
         target_profile.followers.add(request.user)
         messages.success(request, f'You are now following {target_user.username}.')
 
-    return redirect("/")
+    # Get the URL of the page the user was on before the follow/unfollow action
+    referrer_url = request.META.get('HTTP_REFERER', '/')
+
+    return redirect(referrer_url)
     # return redirect(reverse('profile', kwargs={'username': username}))
 
 
